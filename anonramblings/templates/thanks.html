@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="post-preview">
+
+                    <h2>Success!</h2>
+                    <p style="float:left;">
+                        <img src="/static/img/hive-red.png" style="width: 200px !important; height: 200px !important;">
+                    </p>
+                    <p>Thanks for submitting a post! Your post is added to the queue and it will be submitted to the blockchain. Once that happens
+                    you can see your post at this address:
+
+                    </p>
+                    <p style="display: block;"
+                    <p>
+                        <a href="https://anonramblings.com/post/{{  request.GET.permlink|slice:32}}">
+                            anonramblings.com/post/{{  request.GET.permlink|slice:32}}
+
+                        </a>
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

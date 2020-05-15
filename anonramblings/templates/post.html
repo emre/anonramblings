@@ -1,0 +1,41 @@
+{%  extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{%  block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-preview">
+<form method="POST">
+    {% csrf_token %}
+
+      {% if form.errors %}
+ <div class="alert alert-danger">
+ {% for key, value in form.errors.items %}
+            <strong>Error: ({{ key }})</strong>
+ {{ value }}
+
+    {% endfor %}
+
+  {% for key, value in form.non_field_errors.items %}
+            <strong>Error: ({{ key }})</strong>
+ {{ value }}
+
+    {% endfor %}
+          </div>
+      {%  endif %}
+
+    {{ form|crispy }}
+
+  <button type="submit" class="btn btn-primary" style="padding: 8px !important;">Submit</button>
+</form>
+            {{ form.media }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+{%  endblock %}
