@@ -146,7 +146,6 @@ TEMPLATES = [
 
 COMMUNITY_TAG = 'hive-151737'
 POSTER_ACCOUNT = 'anon.test'
-POSTER_ACCOUNTER_KEY = "5JAfC6rFyxw11sH2YATrArwqeBErUiUxnuuySamEpEHXBWF8tRu"
 MAIN_POST_CONTENT = """
 This is a placeholder post to hold today's ramblings. 
 
