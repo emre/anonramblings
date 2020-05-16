@@ -406,7 +406,6 @@ footer .copyright {
 
 @media only screen and (max-width: 992px) {
   header.masthead .post-heading, header.masthead .site-heading {
-      padding: 0;
       color: white;
   }
 }

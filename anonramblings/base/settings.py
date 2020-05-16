@@ -147,6 +147,7 @@ TEMPLATES = [
 COMMUNITY_TAG = 'hive-151737'
 POSTER_ACCOUNT = 'anon.test'
 MAIN_POST_CONTENT = """
+<center><img src="https://i.imgur.com/Hkuql0D.png">
 This is a placeholder post to hold today's ramblings. 
 
 All ramblings posted from the website will be listed in this thread. For the best viewing experience, visit the [website](https://anonramblings.com).
