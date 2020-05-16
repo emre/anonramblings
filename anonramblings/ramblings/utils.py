@@ -30,6 +30,27 @@ def main_post_check(account):
     return today_permlink
 
 
+def get_comment_options(author, permlink):
+
+    comment_options = Operation('comment_options',  {
+        'author': author,
+        'permlink': permlink,
+        'max_accepted_payout': '1000000.000 HBD',
+        'percent_steem_dollars': '10000',
+        'allow_votes': True,
+        'allow_curation_rewards': True,
+        'extensions': [
+            [0, {
+                "beneficiaries": [
+                    {"account": "steem.dao", "weight": 2500},
+                ]
+            }]
+        ]
+    })
+
+    return comment_options
+
+
 def post_daily_post(account, date_str):
 
     post = Operation('comment', {
@@ -42,9 +63,11 @@ def post_daily_post(account, date_str):
         "json_metadata": json.dumps({"tags": [settings.COMMUNITY_TAG, "ramblings"]})
     })
 
+    comment_options = get_comment_options(account, get_permlink(date_str))
+
     c = get_client()
     c.keys = [settings.POSTER_ACCOUNTER_KEY,]
-    c.broadcast(post)
+    c.broadcast([post, comment_options])
 
 
 def post_reply(account, date_str, title, body, permlink):
@@ -66,6 +89,9 @@ def post_reply(account, date_str, title, body, permlink):
         "json_metadata": json.dumps({"tags": [settings.COMMUNITY_TAG]})
     })
 
+    comment_options = get_comment_options(account, permlink)
+
     c = get_client()
     c.keys = [settings.POSTER_ACCOUNTER_KEY, ]
-    c.broadcast(post)
+    print(post, comment_options)
+    print(c.broadcast([post, comment_options]))
