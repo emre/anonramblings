@@ -109,12 +109,12 @@
                             </h5>
                         </a>
 
-                        {#                    <div class="post-subtitle"><a href="/post/{{ post.permlink }}"> → read more </a></div>#}
+                         <div class="post-subtitle">{{ post.formatted_summary|safe }}</div>
 
-                        <p class="post-meta">Posted on {{ post.created_at }}</p>
-                    </div>
+                        <p class="post-meta" style="margin:0 !important;"><small>Posted on {{ post.created_at }}</small></p>
+                    </div><hr>
                 {% endfor %}
-                <hr>
+
 
                 <!-- Pager -->
 

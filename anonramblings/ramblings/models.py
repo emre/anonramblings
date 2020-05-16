@@ -31,6 +31,10 @@ class Post(models.Model):
     def formatted_body(self):
         return markdownify(self.body)
 
+    @property
+    def formatted_summary(self):
+        return markdownify(self.body)[0:300] + ('<small><a href="/post/%s"> → Read more</a> </small>' % self.permlink)
+
     def save(self, *args, **kwwargs):
         if not self.permlink:
             self.permlink = str(uuid.uuid4())
