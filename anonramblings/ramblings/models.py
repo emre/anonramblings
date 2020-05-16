@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.html import strip_tags
 
 from markdownx.models import MarkdownxField
-from markdownx.utils import markdownify
+from .utils import markdownify
 
 import uuid
 

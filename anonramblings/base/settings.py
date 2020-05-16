@@ -180,6 +180,40 @@ CACHES = {
     }
 }
 
+## markdownify
+MARKDOWNIFY_WHITELIST_TAGS = [
+  'a',
+  'abbr',
+  'acronym',
+  'b',
+  'blockquote',
+  'em',
+  'i',
+  'li',
+  'ol',
+  'p',
+  'strong',
+  'ul',
+  'pre',
+  'code',
+]
+MARKDOWNIFY_WHITELIST_PROTOCOLS = [
+    'http',
+    'https',
+]
+MARKDOWNIFY_LINKIFY_PARSE_EMAIL = True
+MARKDOWNIFY_LINKIFY_SKIP_TAGS = ['pre', 'code', ]
+MARKDOWNIFY_WHITELIST_ATTRS = [
+    'href',
+    'src',
+    'alt',
+    'class',
+]
+
+MARKDOWNX_MARKDOWNIFY_FUNCTION = 'ramblings.utils.markdownify'
+
+
+
 try:
     from .local_settings import *
 except ImportError as e:
