@@ -9,7 +9,7 @@ from .forms import PostForm
 def index(request):
     post_list = Post.objects.filter(
         is_approved=True, is_deleted=False).order_by("-id")
-    paginator = Paginator(post_list, 5)
+    paginator = Paginator(post_list, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
