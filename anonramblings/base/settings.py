@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'markdownx',
     'crispy_forms',
     'captcha',
+    'compressor',
 
 ]
 
@@ -144,6 +145,13 @@ TEMPLATES = [
         },
     },
 ]
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
+
 
 COMMUNITY_TAG = 'hive-151737'
 POSTER_ACCOUNT = 'anon.test'
@@ -156,6 +164,22 @@ All ramblings posted from the website will be listed in this thread. For the bes
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CUSTOM_ADMIN_PATH = 'custom_admin_path'
+
+COMPRESS_ENABLED = True
+COMPRESS_OUTPUT_DIR = 'cache'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "anonramblings",
+        "TIMEOUT": 3600,
+    }
+}
+
 try:
     from .local_settings import *
 except ImportError as e:
