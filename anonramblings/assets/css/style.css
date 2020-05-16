@@ -5,14 +5,14 @@
  */
 
 body {
-  font-size: 20px;
+  font-size: 17px;
   color: #212529;
   font-family: 'Lora', 'Times New Roman', serif;
 }
 
 p {
   line-height: 1.5;
-  margin: 30px 0;
+  margin: 10px 0;
 }
 
 p a {
