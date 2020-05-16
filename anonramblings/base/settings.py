@@ -154,7 +154,7 @@ All ramblings posted from the website will be listed in this thread. For the bes
 """
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
+CUSTOM_ADMIN_PATH = 'custom_admin_path'
 try:
     from .local_settings import *
 except ImportError as e:

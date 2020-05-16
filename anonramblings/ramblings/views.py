@@ -33,7 +33,7 @@ def post(request):
 
 def detail(request, permlink):
     try:
-        post = Post.objects.get(permlink=permlink)
+        post = Post.objects.get(permlink=permlink, is_deleted=False)
     except Post.DoesNotExist:
         raise Http404
 

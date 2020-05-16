@@ -3,11 +3,14 @@ from django.conf.urls.static import static
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+
 
 from ramblings.views import index, post, about, thanks, detail
 
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('%s/' % settings.CUSTOM_ADMIN_PATH, admin.site.urls),
     path('', index, name="index"),
     path('post', post, name="post"),
     path('post/<slug:permlink>', detail, name="post_detail"),
