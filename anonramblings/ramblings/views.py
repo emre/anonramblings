@@ -4,13 +4,12 @@ from django.http import Http404
 
 from .models import Post
 from .forms import PostForm
-import uuid
 
 
 def index(request):
-    contact_list = Post.objects.filter(
+    post_list = Post.objects.filter(
         is_approved=True, is_deleted=False).order_by("-id")
-    paginator = Paginator(contact_list, 5)
+    paginator = Paginator(post_list, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
