@@ -18,6 +18,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     permlink = models.CharField(max_length=36, unique=True, db_index=True)
     body = MarkdownxField(max_length=5000)
+    nickname = models.CharField(max_length=255, blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

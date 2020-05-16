@@ -115,7 +115,7 @@
 
                         <div class="post-subtitle">{{ post.formatted_summary | safe }}</div>
 
-                        <p class="post-meta" style="margin:0 !important;"><small><em>Posted
+                        <p class="post-meta" style="margin:0 !important;"><small><em>Posted {% if post.nickname %}by {{ post.nickname }} {% endif %}
                             on {{ post.created_at }}</em></small></p>
                     </div>
                     <hr>

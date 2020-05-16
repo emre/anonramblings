@@ -10,7 +10,7 @@
 
                     {{ post.formatted_body| safe }}
 
-       <p class="post-meta">Posted on {{ post.created_at }}<small>(<a href="https://hiveblocks.com/@{{poster_account}}/{{ post.permlink }}">Blockchain reference</a>)</small></p>
+       <p class="post-meta">Posted {% if post.nickname %}by {{ post.nickname }} {% endif %} on {{ post.created_at }}<small>(<a href="https://hiveblocks.com/@{{poster_account}}/{{ post.permlink }}">Blockchain reference</a>)</small></p>
                 </div>
 
 
