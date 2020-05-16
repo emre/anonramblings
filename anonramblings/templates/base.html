@@ -38,7 +38,7 @@
 
         <link href="/static/css/style.css" rel="stylesheet">
     {% endcompress %}
-
+  <!--  The initial design is based on Clean Blog theme by startboostrap. (https://github.com/BlackrockDigital/startbootstrap-clean-blog) -->
 </head>
 
 <body>
@@ -122,17 +122,15 @@
                 {% endfor %}
 
 
-                <!-- Pager -->
-
                 {% if page_obj.has_previous %}
-                    <div class="clearfix">
+                    <div>
                         <a class="btn btn-primary float-left" href="?page={{ page_obj.previous_page_number }}"> ← Newer
                             Posts </a>
                     </div>
                 {% endif %}
 
                 {% if page_obj.has_next %}
-                    <div class="clearfix">
+                    <div>
                         <a class="btn btn-primary float-right" href="?page={{ page_obj.next_page_number }}">Older Posts
                             →</a>
                     </div>
