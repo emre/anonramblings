@@ -14,6 +14,15 @@
         gtag('js', new Date());
         gtag('config', 'UA-162788737-2');
     </script>
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png">
+    <link rel="manifest" href="/static/img/site.webmanifest">
+    <link rel="mask-icon" href="/static/img/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/static/img/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="/static/img/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Anon Ramblings</title>
@@ -33,7 +42,8 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-        <a class="navbar-brand" href="/"><img src="/static/img/logo-square.png" style="width:40px !important; height: 40px !important;">
+        <a class="navbar-brand" href="/"><img src="/static/img/logo-square.png"
+                                              style="width:40px !important; height: 40px !important;">
             AnonRamblings<small>.com</small></a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
@@ -72,38 +82,38 @@
 
 {% block content %}
     {% for message in messages %}
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12" style="float: none;margin: 0 auto;">
-        <div class="alert alert-{{ message.tags }}">
-          {% if message.tags  == "danger" %}
-            <strong>Error:</strong>
-          {% endif %}{{ message }}</div>
-      </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12" style="float: none;margin: 0 auto;">
+                    <div class="alert alert-{{ message.tags }}">
+                        {% if message.tags  == "danger" %}
+                            <strong>Error:</strong>
+                        {% endif %}{{ message }}</div>
+                </div>
 
-    </div>
-  </div>
-{% endfor %}
+            </div>
+        </div>
+    {% endfor %}
 
     <!-- Main Content -->
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
 
-            {% for post in page_obj %}
+                {% for post in page_obj %}
 
-                <div class="post-title">
-                    <a href="/post/{{ post.permlink }}">
-                        <h3 class="post-title">
-                            {{ post.title }}
-                        </h3>
-                    </a>
+                    <div class="post-title">
+                        <a href="/post/{{ post.permlink }}">
+                            <h3 class="post-title">
+                                {{ post.title }}
+                            </h3>
+                        </a>
 
-{#                    <div class="post-subtitle"><a href="/post/{{ post.permlink }}"> → read more </a></div>#}
+                        {#                    <div class="post-subtitle"><a href="/post/{{ post.permlink }}"> → read more </a></div>#}
 
-                    <p class="post-meta">Posted on {{ post.created_at }}</p>
-                </div>
-            {% endfor %}
+                        <p class="post-meta">Posted on {{ post.created_at }}</p>
+                    </div>
+                {% endfor %}
                 <hr>
 
                 <!-- Pager -->
