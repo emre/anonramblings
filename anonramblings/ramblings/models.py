@@ -32,7 +32,7 @@ class Post(models.Model):
         return markdownify(self.body)
 
     def save(self, *args, **kwwargs):
-        if not self.id:
+        if not self.permlink:
             self.permlink = str(uuid.uuid4())
         super().save(*args, **kwwargs)
 
