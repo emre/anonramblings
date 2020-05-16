@@ -37,7 +37,9 @@ class Post(models.Model):
     @property
     def formatted_summary(self):
         body = strip_tags(self.body)
-        return markdownify(body)[0:300] + ('<small><a href="/post/%s"> → Read more</a> </small>' % self.permlink)
+        if len(body) > 300:
+            return markdownify(body)[0:300] + ('<small><a href="/post/%s"> → Read more</a> </small>' % self.permlink)
+        return markdownify(body)
 
     def save(self, *args, **kwwargs):
 
