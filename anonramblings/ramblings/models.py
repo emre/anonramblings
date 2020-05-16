@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.html import strip_tags
+
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 
@@ -29,13 +31,16 @@ class Post(models.Model):
 
     @property
     def formatted_body(self):
-        return markdownify(self.body)
+        body = strip_tags(self.body)
+        return markdownify(body)
 
     @property
     def formatted_summary(self):
-        return markdownify(self.body)[0:300] + ('<small><a href="/post/%s"> → Read more</a> </small>' % self.permlink)
+        body = strip_tags(self.body)
+        return markdownify(body)[0:300] + ('<small><a href="/post/%s"> → Read more</a> </small>' % self.permlink)
 
     def save(self, *args, **kwwargs):
+
         if not self.permlink:
             self.permlink = str(uuid.uuid4())
         super().save(*args, **kwwargs)
