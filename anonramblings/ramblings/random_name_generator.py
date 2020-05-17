@@ -404,7 +404,3 @@ def get_random_name():
         random.choice(ANIMALS).split(" ")[-1].replace(" ", "_"),
         random.randint(10, 99),
     )
-
-
-for i in range(100):
-    print(get_random_name())
