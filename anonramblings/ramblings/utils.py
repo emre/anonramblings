@@ -4,6 +4,7 @@ from lighthive.datastructures import Operation
 from datetime import datetime
 import json
 from functools import partial
+import re
 
 _client = None
 
@@ -106,10 +107,9 @@ from django.utils.safestring import mark_safe
 
 import markdown
 import bleach
-
+import re
 
 def markdownify(text):
-
     # Bleach settings
     whitelist_tags = getattr(settings, 'MARKDOWNIFY_WHITELIST_TAGS', bleach.sanitizer.ALLOWED_TAGS)
     whitelist_attrs = getattr(settings, 'MARKDOWNIFY_WHITELIST_ATTRS', bleach.sanitizer.ALLOWED_ATTRIBUTES)
@@ -151,5 +151,8 @@ def markdownify(text):
                                  )
 
         html = cleaner.clean(html)
+
+        # ugly hack to use hive's image server
+        html = re.sub(r'src="(.*?)"', r'src="https://images.hive.blog/640x0/\1"', html)
 
     return mark_safe(html)
