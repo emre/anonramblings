@@ -32,4 +32,4 @@ class Command(BaseCommand):
                 except Exception as e:
                     logger.error(e)
 
-            time.sleep(10)
+                time.sleep(5)
