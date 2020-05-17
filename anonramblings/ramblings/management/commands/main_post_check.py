@@ -23,6 +23,8 @@ class Command(BaseCommand):
                 try:
                     if post.parent:
                         reply_to_permlink = post.parent.permlink
+                    else:
+                        reply_to_permlink = None
                     post_reply(settings.POSTER_ACCOUNT, main_post_permlink, post.title, post.body, post.permlink, reply_to_permlink=reply_to_permlink)
                     post.sent_to_blockchain = True
                     post.save()
