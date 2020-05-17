@@ -56,9 +56,10 @@ class Post(MPTTModel):
         return markdownify(body)
 
     def update_ancestors(self):
-        for ancestor in self.get_ancestors():
-            ancestor.comment_count = ancestor.get_descendants().count()
-            ancestor.save()
+        if self.id:
+            for ancestor in self.get_ancestors():
+                ancestor.comment_count = ancestor.get_descendants().count()
+                ancestor.save()
 
     def save(self, *args, **kwwargs):
 
