@@ -3,8 +3,8 @@
 {% recursetree comments %}
     <li>
         <a name="c{{ node.id }}"></a>
-        {{ node.body }}
-        <br><small>{{ node.nickname }}</small> |
+        {{ node.formatted_body | safe }}
+        <small>Comment by {{ node.nickname }}</small> |
         <small>{{ node.created_at|timesince }} ago</small> | <small><a href="{% url 'post' %}?reply_to={{ node.permlink }}"> Reply </a></small>
 
 
