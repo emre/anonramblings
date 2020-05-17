@@ -71,7 +71,7 @@ def post_daily_post(account, date_str):
     c.broadcast([post, comment_options])
 
 
-def post_reply(account, date_str, title, body, permlink):
+def post_reply(account, date_str, title, body, permlink, reply_to_permlink=None):
     template = """**%s**
     
 %s
@@ -80,9 +80,12 @@ def post_reply(account, date_str, title, body, permlink):
 *See this post at [AnonRamblings](https://anonramblings.com/post/%s)*"""
     template = template % (title, body, permlink)
 
+    parent_permlink = get_permlink(date_str)
+    if reply_to_permlink:
+        parent_permlink = reply_to_permlink
     post = Operation('comment', {
         "parent_author": account,
-        "parent_permlink": get_permlink(date_str),
+        "parent_permlink": parent_permlink,
         "author": account,
         "permlink": permlink,
         "title": "Today's ramblings - %s" % date_str,

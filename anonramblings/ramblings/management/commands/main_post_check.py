@@ -22,8 +22,8 @@ class Command(BaseCommand):
             for post in Post.objects.filter(sent_to_blockchain=False).order_by("-pk"):
                 try:
                     if post.parent:
-                        main_post_permlink = post.parent.permlink
-                    post_reply(settings.POSTER_ACCOUNT, main_post_permlink, post.title, post.body, post.permlink)
+                        reply_to_permlink = post.parent.permlink
+                    post_reply(settings.POSTER_ACCOUNT, main_post_permlink, post.title, post.body, post.permlink, reply_to_permlink=reply_to_permlink)
                     post.sent_to_blockchain = True
                     post.save()
                     print("Saved", post.permlink)
