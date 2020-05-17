@@ -153,6 +153,6 @@ def markdownify(text):
         html = cleaner.clean(html)
 
         # ugly hack to use hive's image server
-        html = re.sub(r'src="(.*?)"', r'src="https://images.hive.blog/640x0/\1"', html)
+        html = re.sub(r'src="(.*?)"', r'src="https://images.hive.blog/0x0/\1"', html)
 
     return mark_safe(html)
