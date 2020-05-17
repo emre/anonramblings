@@ -17,17 +17,36 @@ def index(request):
 
 
 def post(request):
+    reply_to = request.GET.get("reply_to")
+
+    # is it a reply?
+    if reply_to:
+        try:
+            parent_post = Post.objects.get(permlink=reply_to)
+        except Post.DoesNotExist:
+            raise Http404
+    else:
+        parent_post = None
+
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, )
+
         if not form.is_valid():
             return render(request, "post.html", {"form": form})
-        instance = form.save()
-        if form.is_valid():
-            return redirect('/thanks/?permlink=%s' % instance.permlink)
+        instance = form.save(commit=False)
+        instance.parent = parent_post
+        instance.save()
+        if reply_to:
+            parent_post.comment_count = parent_post.get_descendants().count()
+            parent_post.save()
+        return redirect('/thanks/?permlink=%s' % instance.permlink)
     else:
-        form = PostForm()
+        initial = {}
+        if parent_post:
+            initial.update({"title": "Re: %s" % parent_post.title})
+        form = PostForm(initial=initial)
 
-    return render(request, "post.html", {"form": form})
+    return render(request, "post.html", {"form": form, "reply_to": reply_to})
 
 
 def detail(request, permlink):
@@ -36,7 +55,10 @@ def detail(request, permlink):
     except Post.DoesNotExist:
         raise Http404
 
-    return render(request, "detail.html", {"post": post})
+    nodes = Post.objects.all()
+
+
+    return render(request, "detail.html", {"post": post, "nodes": nodes})
 
 
 def about(request):

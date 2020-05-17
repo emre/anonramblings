@@ -401,6 +401,10 @@ ADJECTIVES = ['abandoned', 'able', 'absolute', 'adorable', 'adventurous',
 def get_random_name():
     return "%s%s%s" % (
         random.choice(ADJECTIVES),
-        random.choice(ANIMALS).replace(" ", "_"),
+        random.choice(ANIMALS).split(" ")[-1].replace(" ", "_"),
         random.randint(10, 99),
     )
+
+
+for i in range(100):
+    print(get_random_name())

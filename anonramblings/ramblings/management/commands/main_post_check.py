@@ -7,7 +7,6 @@ from django.conf import settings
 
 from ramblings.utils import main_post_check, post_reply
 from ramblings.models import Post
-from ramblings.random_name_generator import get_random_name
 
 from datetime import datetime
 
@@ -22,8 +21,9 @@ class Command(BaseCommand):
 
             for post in Post.objects.filter(sent_to_blockchain=False).order_by("-pk"):
                 try:
+                    if post.parent:
+                        main_post_permlink = post.parent.permlink
                     post_reply(settings.POSTER_ACCOUNT, main_post_permlink, post.title, post.body, post.permlink)
-                    post.nickname = get_random_name()
                     post.sent_to_blockchain = True
                     post.save()
                     print("Saved", post.permlink)

@@ -23,6 +23,7 @@ class PostForm(ModelForm):
             ),
             Submit('submit', 'Submit')
         )
+
     captcha = ReCaptchaField()
     title = CharField(min_length=3, max_length=255)
     body = MarkdownxFormField(min_length=16, max_length=10000)

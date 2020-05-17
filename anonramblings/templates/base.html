@@ -107,6 +107,9 @@
                 {% for post in page_obj %}
 
                     <div class="post-title">
+                    {% if post.parent_id %}
+                        <small> <em>Reaction to <strong><a href="{% url 'post_detail' post.parent.permlink %}">{{ post.parent_post.title }}</a></strong></small></em>
+                    {% endif %}
                         <a href="/post/{{ post.permlink }}">
                             <h5 class="post-title">
                                 {{ post.title }}
@@ -117,6 +120,8 @@
 
                         <p class="post-meta" style="margin:0 !important;"><small><em>Posted {% if post.nickname %}by {{ post.nickname }} {% endif %}
                             on {{ post.created_at }}</em></small></p>
+
+                        <p><small><i class="fas fa-comment"></i> {{ post.comment_count }} comments  | <a href="{% url 'post' %}?reply_to={{ post.permlink }}">Reply </a></small></p>
                     </div>
                     <hr>
                 {% endfor %}

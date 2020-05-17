@@ -1,0 +1,16 @@
+{% load mptt_tags %}
+
+{% recursetree comments %}
+    <li>
+        <a name="c{{ node.id }}"></a>
+        {{ node.body }}
+        <br><small>{{ node.nickname }}</small> |
+        <small>{{ node.created_at|timesince }} ago</small> | <small><a href="{% url 'post' %}?reply_to={{ node.permlink }}"> Reply </a></small>
+
+
+        {% if not node.is_leaf_node %}
+            <ul class="children">
+                {{ children }}
+            </ul>
+        {% endif %}</li>
+{% endrecursetree %}
