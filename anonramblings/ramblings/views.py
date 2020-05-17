@@ -57,7 +57,6 @@ def detail(request, permlink):
 
     nodes = Post.objects.all()
 
-
     return render(request, "detail.html", {"post": post, "nodes": nodes})
 
 

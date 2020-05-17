@@ -55,12 +55,19 @@ class Post(MPTTModel):
             return markdownify(body)[0:300] + ('<small><a href="/post/%s"> → Read more</a> </small>' % self.permlink)
         return markdownify(body)
 
+    def update_ancestors(self):
+        for ancestor in self.get_ancestors():
+            ancestor.comment_count = ancestor.get_descendants().count()
+            ancestor.save()
+
     def save(self, *args, **kwwargs):
 
         if not self.permlink:
             self.permlink = str(uuid.uuid4())
         if not self.nickname:
             self.nickname = get_random_name()
+
+        self.update_ancestors()
 
         super().save(*args, **kwwargs)
 
