@@ -5,10 +5,21 @@ from django.http import Http404
 from .models import Post
 from .forms import PostForm
 
+from datetime import datetime, timedelta
+
 
 def index(request):
+
+    three_days_ago = datetime.utcnow() - timedelta(days=3)
+
     post_list = Post.objects.filter(
-        is_approved=True, is_deleted=False).order_by("-id")
+        is_approved=True, is_deleted=False)
+    if 'trending' in request.path:
+        post_list = post_list.filter(
+            created_at__gt=three_days_ago).order_by("-comment_count")
+    else:
+        post_list = post_list.order_by("-id")
+
     paginator = Paginator(post_list, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
