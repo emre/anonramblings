@@ -18,7 +18,7 @@ class Tag(models.Model):
 class Post(MPTTModel):
     title = models.CharField(max_length=255)
     permlink = models.CharField(max_length=36, unique=True, db_index=True)
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True, on_delete=models.DO_NOTHING)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True, on_delete=models.CASCADE)
     body = MarkdownxField(max_length=5000)
     nickname = models.CharField(max_length=255, blank=True, null=True)
     is_deleted = models.BooleanField(default=False)
@@ -57,8 +57,9 @@ class Post(MPTTModel):
 
     def update_ancestors(self):
         if self.id:
-            for ancestor in self.get_ancestors():
-                ancestor.comment_count = ancestor.get_descendants().count()
+            for ancestor in self.get_ancestors().filter(is_deleted=False):
+                ancestor.comment_count = ancestor.get_descendants().filter(
+                    is_deleted=False).count()
                 ancestor.save()
 
     def save(self, *args, **kwwargs):

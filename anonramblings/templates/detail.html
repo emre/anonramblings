@@ -19,7 +19,7 @@
 {% if not node.is_leaf_node %}
 
                     <ul class="children">
-                        {% with post.get_descendants as comments %}{% include "comments.html" %}{% endwith %}
+                        {% with descendants as comments %}{% include "comments.html" %}{% endwith %}
                     </ul>
             {% endif %}
 

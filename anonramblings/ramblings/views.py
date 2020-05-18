@@ -55,9 +55,9 @@ def detail(request, permlink):
     except Post.DoesNotExist:
         raise Http404
 
-    nodes = Post.objects.all()
+    descendants = post.get_descendants().filter(is_deleted=False)
 
-    return render(request, "detail.html", {"post": post, "nodes": nodes})
+    return render(request, "detail.html", {"post": post, "descendants": descendants})
 
 
 def about(request):
