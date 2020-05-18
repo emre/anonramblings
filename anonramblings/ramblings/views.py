@@ -16,7 +16,7 @@ def index(request):
         is_approved=True, is_deleted=False)
     if 'trending' in request.path:
         post_list = post_list.filter(
-            created_at__gt=three_days_ago).order_by("-comment_count")
+            created_at__gt=three_days_ago, parent=None).order_by("-comment_count")
     else:
         post_list = post_list.order_by("-id")
 
