@@ -14,11 +14,18 @@ def index(request):
 
     post_list = Post.objects.filter(
         is_approved=True, is_deleted=False)
+
+    if 'q' in request.GET:
+        post_list = post_list.filter(
+            title__icontains=request.GET.get("q")) | post_list.filter(
+            body__icontains=request.GET.get("q"))
+
     if 'trending' in request.path:
         post_list = post_list.filter(
             created_at__gt=three_days_ago, parent=None).order_by("-comment_count")
     else:
         post_list = post_list.order_by("-id")
+
 
     paginator = Paginator(post_list, 8)
     page_number = request.GET.get('page')
