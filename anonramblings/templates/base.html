@@ -118,6 +118,10 @@
                 {% if not page_obj %}
                     <p>No results.</p>
                 {% endif %}
+                {% if request.GET.q and page_obj%}
+                    <h5>Search Results for '{{ request.GET.q|slice:"32" }}'</h5>
+                    <hr>
+                {% endif %}
                 {% for post in page_obj %}
 
                     <div class="post-title">
