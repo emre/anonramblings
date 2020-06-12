@@ -19,7 +19,7 @@ class Command(BaseCommand):
         while True:
             main_post_permlink = main_post_check(settings.POSTER_ACCOUNT)
 
-            for post in Post.objects.filter(sent_to_blockchain=False).order_by("-pk"):
+            for post in Post.objects.filter(sent_to_blockchain=False).order_by("pk"):
                 try:
                     if post.parent:
                         reply_to_permlink = post.parent.permlink
