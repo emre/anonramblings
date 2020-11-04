@@ -1,6 +1,7 @@
 from lighthive.client import Client
 import json
 import re
+import time
 from datetime import datetime
 from functools import partial
 
@@ -20,7 +21,8 @@ _client = None
 def get_client():
     global _client
     if not _client:
-        _client = Client()
+        import logging
+        _client = Client(nodes=["https://api.hive.blog"], loglevel=logging.ERROR)
 
     return _client
 
@@ -32,30 +34,29 @@ def get_permlink(date_str):
 def main_post_check(account):
     c = get_client()
     today_permlink = datetime.today().strftime('%Y-%m-%d')
-    content = c.get_content(account, get_permlink(today_permlink))
+    try:
+        content = c.get_content(account, get_permlink(today_permlink))
+    except Exception as e:
+        content = {"id": 0}
+
+    
     if content.get("id") == 0:
         print("No main post found. Creating one")
         post_daily_post(account, today_permlink)
-
+        time.sleep(300)
     return today_permlink
 
 
 def get_comment_options(author, permlink):
-
+    from lighthive.helpers.amount import Amount
     comment_options = Operation('comment_options',  {
         'author': author,
         'permlink': permlink,
         'max_accepted_payout': '1000000.000 HBD',
-        'percent_steem_dollars': '10000',
+        'percent_hive_dollars': '10000',
         'allow_votes': True,
         'allow_curation_rewards': True,
-        'extensions': [
-            [0, {
-                "beneficiaries": [
-                    {"account": "steem.dao", "weight": 2500},
-                ]
-            }]
-        ]
+        'extensions': []
     })
 
     return comment_options
@@ -106,9 +107,7 @@ def post_reply(account, date_str, title, body, permlink, reply_to_permlink=None)
 
     c = get_client()
     c.keys = [settings.POSTER_ACCOUNTER_KEY, ]
-    print(post, comment_options)
     print(c.broadcast([post, comment_options]))
-
 
 
 def markdownify(text):
