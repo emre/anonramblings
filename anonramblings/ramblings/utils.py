@@ -21,9 +21,7 @@ _client = None
 def get_client():
     global _client
     if not _client:
-        import logging
-        _client = Client(nodes=["https://api.hive.blog"], loglevel=logging.ERROR)
-
+        _client = Client(nodes=["https://api.hive.blog"])
     return _client
 
 
@@ -36,10 +34,10 @@ def main_post_check(account):
     today_permlink = datetime.today().strftime('%Y-%m-%d')
     try:
         content = c.get_content(account, get_permlink(today_permlink))
-    except Exception as e:
+    except Exception as e:    
+        # after hf24, if the permlink is invalid, api returns an error
         content = {"id": 0}
 
-    
     if content.get("id") == 0:
         print("No main post found. Creating one")
         post_daily_post(account, today_permlink)
@@ -48,7 +46,6 @@ def main_post_check(account):
 
 
 def get_comment_options(author, permlink):
-    from lighthive.helpers.amount import Amount
     comment_options = Operation('comment_options',  {
         'author': author,
         'permlink': permlink,
