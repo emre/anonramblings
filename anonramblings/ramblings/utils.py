@@ -1,9 +1,19 @@
+from lighthive.client import Client
+import json
+import re
+import time
+from datetime import datetime
+from functools import partial
+
+import bleach
+import markdown
 from django.conf import settings
+from django.utils.safestring import mark_safe
 from lighthive.client import Client
 from lighthive.datastructures import Operation
-from datetime import datetime
-import json
-from functools import partial
+
+APP_NAME = "anonramblings/0.0.1"
+
 
 _client = None
 
@@ -11,7 +21,8 @@ _client = None
 def get_client():
     global _client
     if not _client:
-        _client = Client()
+        import logging
+        _client = Client(nodes=["https://api.hive.blog"], loglevel=logging.ERROR)
 
     return _client
 
@@ -23,30 +34,29 @@ def get_permlink(date_str):
 def main_post_check(account):
     c = get_client()
     today_permlink = datetime.today().strftime('%Y-%m-%d')
-    content = c.get_content(account, get_permlink(today_permlink))
+    try:
+        content = c.get_content(account, get_permlink(today_permlink))
+    except Exception as e:
+        content = {"id": 0}
+
+    
     if content.get("id") == 0:
         print("No main post found. Creating one")
         post_daily_post(account, today_permlink)
-
+        time.sleep(300)
     return today_permlink
 
 
 def get_comment_options(author, permlink):
-
+    from lighthive.helpers.amount import Amount
     comment_options = Operation('comment_options',  {
         'author': author,
         'permlink': permlink,
         'max_accepted_payout': '1000000.000 HBD',
-        'percent_steem_dollars': '10000',
+        'percent_hive_dollars': '10000',
         'allow_votes': True,
         'allow_curation_rewards': True,
-        'extensions': [
-            [0, {
-                "beneficiaries": [
-                    {"account": "steem.dao", "weight": 2500},
-                ]
-            }]
-        ]
+        'extensions': []
     })
 
     return comment_options
@@ -61,7 +71,7 @@ def post_daily_post(account, date_str):
         "permlink": get_permlink(date_str),
         "title": "Today's ramblings - %s" % date_str,
         "body": settings.MAIN_POST_CONTENT,
-        "json_metadata": json.dumps({"tags": [settings.COMMUNITY_TAG, "ramblings"]})
+        "json_metadata": json.dumps({"tags": [settings.COMMUNITY_TAG, "ramblings"], "app": APP_NAME})
     })
 
     comment_options = get_comment_options(account, get_permlink(date_str))
@@ -71,7 +81,7 @@ def post_daily_post(account, date_str):
     c.broadcast([post, comment_options])
 
 
-def post_reply(account, date_str, title, body, permlink):
+def post_reply(account, date_str, title, body, permlink, reply_to_permlink=None):
     template = """**%s**
     
 %s
@@ -80,33 +90,27 @@ def post_reply(account, date_str, title, body, permlink):
 *See this post at [AnonRamblings](https://anonramblings.com/post/%s)*"""
     template = template % (title, body, permlink)
 
+    parent_permlink = get_permlink(date_str)
+    if reply_to_permlink:
+        parent_permlink = reply_to_permlink
     post = Operation('comment', {
         "parent_author": account,
-        "parent_permlink": get_permlink(date_str),
+        "parent_permlink": parent_permlink,
         "author": account,
         "permlink": permlink,
         "title": "Today's ramblings - %s" % date_str,
         "body": template,
-        "json_metadata": json.dumps({"tags": [settings.COMMUNITY_TAG]})
+        "json_metadata": json.dumps({"tags": [settings.COMMUNITY_TAG], "app": APP_NAME})
     })
 
     comment_options = get_comment_options(account, permlink)
 
     c = get_client()
     c.keys = [settings.POSTER_ACCOUNTER_KEY, ]
-    print(post, comment_options)
     print(c.broadcast([post, comment_options]))
 
 
-from django.conf import settings
-from django.utils.safestring import mark_safe
-
-import markdown
-import bleach
-
-
 def markdownify(text):
-
     # Bleach settings
     whitelist_tags = getattr(settings, 'MARKDOWNIFY_WHITELIST_TAGS', bleach.sanitizer.ALLOWED_TAGS)
     whitelist_attrs = getattr(settings, 'MARKDOWNIFY_WHITELIST_ATTRS', bleach.sanitizer.ALLOWED_ATTRIBUTES)
@@ -148,5 +152,9 @@ def markdownify(text):
                                  )
 
         html = cleaner.clean(html)
+
+        # ugly hack to use hive's image server
+        html = re.sub(
+            r'src="(.*?)"', r'src="https://images.hive.blog/0x0/\1"', html)
 
     return mark_safe(html)

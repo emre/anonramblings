@@ -5,10 +5,27 @@ from django.http import Http404
 from .models import Post
 from .forms import PostForm
 
+from datetime import datetime, timedelta
+
 
 def index(request):
+
+    three_days_ago = datetime.utcnow() - timedelta(days=3)
+
     post_list = Post.objects.filter(
-        is_approved=True, is_deleted=False).order_by("-id")
+        is_approved=True, is_deleted=False)
+
+    if 'q' in request.GET and len(request.GET.get("q")) > 1:
+        post_list = post_list.filter(
+            title__icontains=request.GET.get("q")) | post_list.filter(
+            body__icontains=request.GET.get("q"))
+
+    if 'trending' in request.path:
+        post_list = post_list.filter(
+            created_at__gt=three_days_ago, parent=None).order_by("-comment_count")
+    else:
+        post_list = post_list.order_by("-id")
+
     paginator = Paginator(post_list, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -17,17 +34,36 @@ def index(request):
 
 
 def post(request):
+    reply_to = request.GET.get("reply_to")
+
+    # is it a reply?
+    if reply_to:
+        try:
+            parent_post = Post.objects.get(permlink=reply_to)
+        except Post.DoesNotExist:
+            raise Http404
+    else:
+        parent_post = None
+
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, )
+
         if not form.is_valid():
             return render(request, "post.html", {"form": form})
-        instance = form.save()
-        if form.is_valid():
-            return redirect('/thanks/?permlink=%s' % instance.permlink)
+        instance = form.save(commit=False)
+        instance.parent = parent_post
+        instance.save()
+        if reply_to:
+            parent_post.comment_count = parent_post.get_descendants().count()
+            parent_post.save()
+        return redirect('/thanks/?permlink=%s' % instance.permlink)
     else:
-        form = PostForm()
+        initial = {}
+        if parent_post:
+            initial.update({"title": "Re: %s" % parent_post.title})
+        form = PostForm(initial=initial)
 
-    return render(request, "post.html", {"form": form})
+    return render(request, "post.html", {"form": form, "reply_to": reply_to})
 
 
 def detail(request, permlink):
@@ -36,7 +72,9 @@ def detail(request, permlink):
     except Post.DoesNotExist:
         raise Http404
 
-    return render(request, "detail.html", {"post": post})
+    descendants = post.get_descendants().filter(is_deleted=False)
+
+    return render(request, "detail.html", {"post": post, "descendants": descendants})
 
 
 def about(request):

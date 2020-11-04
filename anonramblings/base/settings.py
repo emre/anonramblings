@@ -25,7 +25,7 @@ SECRET_KEY = 'r9g&oc$45gx*__^&(@d0fa3lc7did&&cueplovh)vkfm4r%(c9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['anonramblings.com', 'test.anonramblings.com', 'www.test.anonramblings.com', 'localhost']
+ALLOWED_HOSTS = ['anonramblings.com', 'test.anonramblings.com', 'www.test.anonramblings.com', 'localhost', '*']
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'captcha',
     'compressor',
+    'mptt',
 
 ]
 
@@ -196,6 +197,7 @@ MARKDOWNIFY_WHITELIST_TAGS = [
   'ul',
   'pre',
   'code',
+  'img'
 ]
 MARKDOWNIFY_WHITELIST_PROTOCOLS = [
     'http',

@@ -1,19 +1,30 @@
 {% extends "base.html" %}
+{% load mptt_tags %}
 
 {% block content %}
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
                 <div class="post-preview">
-
-                    <h5>{{post.title}}</h5>
+                    {% if post.parent_id %}
+                        <small> <em>Reaction to <strong><a href="{% url 'post_detail' post.parent.permlink %}">{{ post.parent_post.title }}</a></strong></small></em>
+                    {% endif %}
+                    <h5>{{ post.title }}</h5>
 
                     {{ post.formatted_body| safe }}
 
-       <p class="post-meta">Posted on {{ post.created_at }}<small>(<a href="https://hiveblocks.com/@{{poster_account}}/{{ post.permlink }}">Blockchain reference</a>)</small></p>
+                    <p class="post-meta">Posted {% if post.nickname %}by {{ post.nickname }} {% endif %}
+                        on <a href="https://hiveblocks.com/@{{poster_account}}/{{ post.permlink }}">{{ post.created_at }} |  <a href="{% url 'post' %}?reply_to={{ post.permlink }}"> Reply </a>
+                    </p>
+{% if not node.is_leaf_node %}
+
+                    <ul class="children">
+                        {% with descendants as comments %}{% include "comments.html" %}{% endwith %}
+                    </ul>
+            {% endif %}
+
+
                 </div>
-
-
 
             </div>
         </div>

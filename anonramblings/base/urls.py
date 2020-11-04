@@ -12,6 +12,7 @@ from ramblings.views import index, post, about, thanks, detail
 urlpatterns = [
     path('%s/' % settings.CUSTOM_ADMIN_PATH, admin.site.urls),
     path('', index, name="index"),
+    path('trending', index, name="trending"),
     path('post', post, name="post"),
     path('post/<slug:permlink>', detail, name="post_detail"),
     path('thanks/', thanks, name="thanks"),

@@ -38,7 +38,7 @@
 
         <link href="/static/css/style.css" rel="stylesheet">
     {% endcompress %}
-  <!--  The initial design is based on Clean Blog theme by startboostrap. (https://github.com/BlackrockDigital/startbootstrap-clean-blog) -->
+    <!--  The initial design is based on Clean Blog theme by startboostrap. (https://github.com/BlackrockDigital/startbootstrap-clean-blog) -->
 </head>
 
 <body>
@@ -57,8 +57,17 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                    <form class="form-inline my-2 my-lg-0" method="GET" action="/">
+                        <input class="form-control mr-sm-2 nav-link" type="search" placeholder="Search"
+                               aria-label="Search" style="font-size:13px" name="q">
+                    </form>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'trending' %}">Trending</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'about' %}">About</a>
@@ -66,8 +75,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'post' %}">Submit</a>
                 </li>
+
             </ul>
+
         </div>
+
     </div>
 </nav>
 
@@ -103,10 +115,21 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
-
+                {% if not page_obj %}
+                    <p>No results.</p>
+                {% endif %}
+                {% if request.GET.q and page_obj%}
+                    <h5>Search Results for '{{ request.GET.q|slice:"32" }}'</h5>
+                    <hr>
+                {% endif %}
                 {% for post in page_obj %}
 
                     <div class="post-title">
+                        {% if post.parent_id %}
+                            <small> <em>Reaction to <strong><a
+                                    href="{% url 'post_detail' post.parent.permlink %}">{{ post.parent_post.title }}</a></strong></small>
+                            </em>
+                        {% endif %}
                         <a href="/post/{{ post.permlink }}">
                             <h5 class="post-title">
                                 {{ post.title }}
@@ -115,8 +138,12 @@
 
                         <div class="post-subtitle">{{ post.formatted_summary | safe }}</div>
 
-                        <p class="post-meta" style="margin:0 !important;"><small><em>Posted
+                        <p class="post-meta" style="margin:0 !important;"><small><em>Posted {% if post.nickname %}by
+                            {{ post.nickname }} {% endif %}
                             on {{ post.created_at }}</em></small></p>
+
+                        <p><small><i class="fas fa-comment"></i> {{ post.comment_count }} comments | <a
+                                href="{% url 'post' %}?reply_to={{ post.permlink }}">Reply </a></small></p>
                     </div>
                     <hr>
                 {% endfor %}
@@ -150,7 +177,11 @@
         </div>
     </div>
 </footer>
-
+<!-- Bootstrap core JavaScript -->
+{% compress js inline %}
+    <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+{% endcompress %}
 </body>
 
 </html>
